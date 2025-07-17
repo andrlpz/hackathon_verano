@@ -269,10 +269,10 @@ export default function Tablero() {
             <div className="flex flex-col items-center mt-4">
               <span className="text-2xl font-bold text-green-700 fade-in">¡{playerNames[winner]} ganó!</span>
               <a
-                href="/fin"
+                href="/perfil"
                 className="mt-4 px-6 py-2 rounded-full bg-gradient-to-r from-green-500 to-blue-400 text-white text-lg font-semibold shadow-lg hover:scale-105 hover:from-green-600 hover:to-blue-500 transition-all duration-300"
               >
-                Ver resumen
+                Ir a perfil
               </a>
             </div>
           )}

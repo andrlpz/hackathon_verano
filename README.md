@@ -14,9 +14,9 @@ Requerimientos
 -Victoria al llegar a la última casilla.
 -Juego multijugador: de 2 a 4 jugadores por sala, con turnos.
 -Pantalla principal de bienvenida.
--Algunas casillas otorgan puntos extra.
+-Algunas casillas otorgan puntos.
 -Con los puntos se pueden comprar powerups.
 -Gana quien llegue primero al final.
--Para avanzar, es obligatorio contestar correctamente una pregunta.
+-Para avanzar escalres o bajar serpientes, es obligatorio contestar correctamente una pregunta.
 -Progreso guardado en la cuenta: número de juegos ganados, perdidos y totales.
 -Mostrar visualmente el turno del jugador.
