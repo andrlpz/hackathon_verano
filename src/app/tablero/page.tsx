@@ -4,8 +4,8 @@ import { questions, Question } from "./questions";
 import Dice from "./Dice";
 
 // Serpientes y escaleras: casilla origen -> destino
-const snakes: Record<number, number> = { 16: 6, 33: 13, 38: 20 };
-const ladders: Record<number, number> = { 3: 22, 11: 28, 21: 32 };
+const snakes: Record<number, number> = { 17: 6, 33: 13, 38: 20 };
+const ladders: Record<number, number> = { 3: 24, 6: 21, 20: 27 };
 const allColors = ["bg-green-500", "bg-blue-500", "bg-yellow-500", "bg-red-500"];
 const allNames = ["Jugador 1", "Jugador 2", "Jugador 3", "Jugador 4"];
 
@@ -154,6 +154,9 @@ export default function Tablero() {
     }
   };
 
+    // Función que dado el número de casilla devuelve el índice visual en el grid
+  const getVisualIndex = (num: number) => cells.findIndex(n => n === num);
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-300 via-blue-200 to-yellow-100 fade-in p-4">
       <div className="bg-white/80 shadow-2xl rounded-3xl p-6 flex flex-col items-center gap-6 max-w-3xl w-full border border-green-100 backdrop-blur-md slide-up">
@@ -180,34 +183,52 @@ export default function Tablero() {
           <svg className="absolute left-0 top-0 pointer-events-none z-10" width="100%" height="100%" viewBox={`0 0 ${cols*100} ${rows*100}`} style={{width: '100%', height: '100%'}}>
             {/* Serpientes */}
             {Object.entries(snakes).map(([from, to], i) => {
-                // from: cabeza de serpiente (donde aparece la pregunta)
-                // to: cola de serpiente (destino)
-                const fromIdx = cells.indexOf(Number(from));
-                const toIdx = cells.indexOf(Number(to));
-                if (fromIdx === -1 || toIdx === -1) return null;
-                const fx = (fromIdx % cols) * 100 + 50;
-                const fy = Math.floor(fromIdx / cols) * 100 + 50;
-                const tx = (toIdx % cols) * 100 + 50;
-                const ty = Math.floor(toIdx / cols) * 100 + 50;
-                return (
-                  <path key={i} d={`M${fx},${fy} Q${fx+((tx-fx)/2)},${fy+((ty-fy)/2)-60} ${tx},${ty}`} stroke="#dc2626" strokeWidth="6" fill="none" markerEnd="url(#snakeHead)" opacity="0.7"/>
-                );
-              })}
-              {/* Escaleras */}
-              {Object.entries(ladders).map(([from, to], i) => {
-                // from: base de escalera (donde aparece la pregunta)
-                // to: cima de escalera (destino)
-                const fromIdx = cells.indexOf(Number(from));
-                const toIdx = cells.indexOf(Number(to));
-                if (fromIdx === -1 || toIdx === -1) return null;
-                const fx = (fromIdx % cols) * 100 + 50;
-                const fy = Math.floor(fromIdx / cols) * 100 + 50;
-                const tx = (toIdx % cols) * 100 + 50;
-                const ty = Math.floor(toIdx / cols) * 100 + 50;
-                return (
-                  <path key={i} d={`M${fx},${fy} Q${fx+((tx-fx)/2)},${fy+((ty-fy)/2)+60} ${tx},${ty}`} stroke="#16a34a" strokeWidth="6" fill="none" markerEnd="url(#ladderHead)" opacity="0.7"/>
-                );
-              })}
+  // from: cabeza de serpiente (donde aparece la pregunta)
+  // to: cola de serpiente (destino)
+  // (casilla 16 eliminada del objeto snakes, serpiente visual y lógica movida a 17 si corresponde visualmente)
+  const fromIdx = cells.indexOf(Number(from));
+  const toIdx = cells.indexOf(Number(to));
+  if (fromIdx === -1 || toIdx === -1) return null;
+  const getCellCenter = (idx: number) => {
+    const row = Math.floor(idx / cols);
+    // Zigzag: si la fila es impar, invertir columna
+    const col = row % 2 === 0 ? idx % cols : cols - 1 - (idx % cols);
+    return {
+      x: col * 100 + 50,
+      y: row * 100 + 50
+    };
+  };
+  const { x: fx, y: fy } = getCellCenter(fromIdx);
+  const { x: tx, y: ty } = getCellCenter(toIdx);
+  return (
+    <path key={i} d={`M${fx},${fy} Q${fx+((tx-fx)/2)},${fy+((ty-fy)/2)-60} ${tx},${ty}`} stroke="#dc2626" strokeWidth="6" fill="none" markerEnd="url(#snakeHead)" opacity="0.7"/>
+  );
+})}
+            {/* Escaleras */}
+            {Object.entries(ladders).map(([from, to], i) => {
+  // from: base de escalera (donde aparece la pregunta)
+  // to: cima de escalera (destino)
+  // (escalera 3 ahora conecta a la 24, 6 a la 21 y 20 a la 27)
+  // (casilla 11 eliminada del objeto ladders para evitar pregunta fantasma)
+  // (casilla 21 eliminada del objeto ladders para evitar pregunta fantasma)
+  const fromIdx = getVisualIndex(Number(from));
+  const toIdx = getVisualIndex(Number(to));
+  if (fromIdx === -1 || toIdx === -1) return null;
+  const getCellCenter = (idx: number) => {
+    const row = Math.floor(idx / cols);
+    // Zigzag: si la fila es impar, invertir columna
+    const col = row % 2 === 0 ? idx % cols : cols - 1 - (idx % cols);
+    return {
+      x: col * 100 + 50,
+      y: row * 100 + 50
+    };
+  };
+  const { x: fx, y: fy } = getCellCenter(fromIdx);
+  const { x: tx, y: ty } = getCellCenter(toIdx);
+  return (
+    <path key={i} d={`M${fx},${fy} Q${fx+((tx-fx)/2)},${fy+((ty-fy)/2)+60} ${tx},${ty}`} stroke="#16a34a" strokeWidth="6" fill="none" markerEnd="url(#ladderHead)" opacity="0.7"/>
+  );
+})}
             <defs>
               <marker id="snakeHead" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto" markerUnits="strokeWidth">
                 <circle cx="6" cy="6" r="5" fill="#dc2626"/>
