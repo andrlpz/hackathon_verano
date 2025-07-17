@@ -24,3 +24,29 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Animaciones personalizadas para la app */
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.fade-in {
+  animation: fade-in 1s ease;
+}
+
+@keyframes slide-up {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.slide-up {
+  animation: slide-up 0.7s cubic-bezier(.6,-0.28,.74,.05) 0.2s both;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.pop-in {
+  animation: pop-in 0.7s cubic-bezier(.6,-0.28,.74,.05) 0.4s both;
+}
+
